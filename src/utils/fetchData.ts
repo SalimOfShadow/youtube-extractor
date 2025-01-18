@@ -1,53 +1,71 @@
-import * as dotenv from "dotenv";
-import * as fs from "fs";
-dotenv.config({ path: "../../.env" });
+import * as dotenv from 'dotenv';
+import * as fs from 'fs';
+import { getVideoDescription } from './getVideoDescription';
+import { parseEntry } from './parseEntry';
+dotenv.config({ path: '../.env' });
 
-interface VideoInfo {
-  videoId: string;
-  description: string;
+if (!fs.existsSync('../.env')) {
+  console.log('The .env file does not exist.');
 }
 
 const API_KEY = process.env.YOUTUBE_API_KEY;
 const resultsNumber = process.env.RESULT_NUMBER;
 
-export async function fetchData(channelId: string) {
+export interface IdAndDescription {
+  videoId: string;
+  description: string;
+}
+
+export interface VideoInfo {
+  videoId: string;
+  myCharacter: string;
+  opponentsCharacter: string;
+  roundsSetting: number;
+  roundsWon: number;
+  roundsLost: number;
+  matchWon: boolean;
+}
+
+export async function fetchData(channelId: string): Promise<boolean> {
   try {
     const response = await fetch(
       `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${channelId}&part=snippet,id&order=date&maxResults=${resultsNumber}`
     );
+
     if (!response.ok) {
       throw new Error(`Failed to fetch data: ${response.statusText}`);
     }
 
     const data = await response.json();
 
-    const videosResult: VideoInfo[] = data.items.map(
-      (item: { id: { videoId: any }; snippet: { description: any } }) => ({
-        videoId: item.id.videoId,
-        description: item.snippet.description,
-      })
+    const idAndDescription = await Promise.all(
+      data.items.map(
+        async (item: {
+          id: { videoId: any };
+          snippet: { description: any };
+        }) => ({
+          videoId: item.id.videoId,
+          description: await getVideoDescription(item.id.videoId, API_KEY!),
+        })
+      )
     );
 
+    const videosResult: VideoInfo[] = idAndDescription.map(parseEntry);
+
     try {
-      fs.writeFile(
-        "../result.json",
-        JSON.stringify(videosResult),
-        function (err) {
-          if (err) {
-            throw new Error(`Failed to write to file: ${err.message}`);
-          }
-        }
-      );
+      fs.writeFileSync('../result.json', JSON.stringify(videosResult));
+      console.log('File written successfully');
+      return true;
     } catch (err: unknown) {
-      console.error("File write error:", err);
-      throw err;
+      console.error('File write error:', err);
+      return false;
     }
   } catch (err: unknown) {
-    console.error("Error fetching or processing data:", err);
-    throw err;
+    console.error('Error fetching or processing data:', err);
+    return false;
   }
 }
 
 setInterval(async () => {
-  await fetchData("UChyN8KYX-0MZc_lRuVC1tRw");
-}, 1000 * 60 * 60 * 12); // Every 12 hours
+  await fetchData('UChyN8KYX-0MZc_lRuVC1tRw');
+}, 1000 * 60 * 60 * 12);
