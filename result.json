@@ -1,1 +1,47 @@
-[{"videoId":"bZF_rho9erw","myCharacter":"Bison","opponentsCharacter":"Akuma","roundsSetting":7,"roundsWon":4,"roundsLost":2,"matchWon":true}]
+[
+  {
+    "videoId": "VwBLyHjzEZ4",
+    "myCharacter": "Akuma",
+    "opponentsCharacter": "Akuma",
+    "roundsSetting": 5,
+    "roundsWon": 3,
+    "roundsLost": 2,
+    "matchWon": true
+  },
+  {
+    "videoId": "y6PQPTk98WE",
+    "myCharacter": "Bison",
+    "opponentsCharacter": "Bison",
+    "roundsSetting": 3,
+    "roundsWon": 1,
+    "roundsLost": 2,
+    "matchWon": false
+  },
+  {
+    "videoId": "sHg2tfAE4xo",
+    "myCharacter": "Bison",
+    "opponentsCharacter": "Bison",
+    "roundsSetting": 3,
+    "roundsWon": 1,
+    "roundsLost": 2,
+    "matchWon": false
+  },
+  {
+    "videoId": "SYN4OBm5QoY",
+    "myCharacter": "Akuma",
+    "opponentsCharacter": "Akuma",
+    "roundsSetting": 5,
+    "roundsWon": 3,
+    "roundsLost": 2,
+    "matchWon": true
+  },
+  {
+    "videoId": "bZF_rho9erw",
+    "myCharacter": "Bison",
+    "opponentsCharacter": "Akuma",
+    "roundsSetting": 7,
+    "roundsWon": 4,
+    "roundsLost": 2,
+    "matchWon": true
+  }
+]
