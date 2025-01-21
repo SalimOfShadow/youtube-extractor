@@ -1,10 +1,11 @@
-import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import { getVideoDescription } from './getVideoDescription';
 import { parseEntry } from './parseEntry';
-dotenv.config({ path: '../.env' });
+import * as dotenv from 'dotenv';
 
-if (!fs.existsSync('../.env')) {
+dotenv.config({ path: './.env' });
+
+if (!fs.existsSync('./.env')) {
   console.log('The .env file does not exist.');
 }
 
