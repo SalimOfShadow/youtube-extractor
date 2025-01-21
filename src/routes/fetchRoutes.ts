@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.get('/retrieve-info', async (req: Request, res: Response) => {
   try {
+    console.log('Route hit');
     if (!fs.existsSync(filePath)) {
       const writeFileResult = await fetchData('UCIKV_c4o3MpUTjoWObynLTw');
       if (writeFileResult === true) {
