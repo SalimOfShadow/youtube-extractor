@@ -6,6 +6,8 @@ COPY . .
 
 COPY .env .env
 
+COPY ./src/keys ./keys
+
 RUN npm install
 
 RUN npm run build

@@ -1,12 +1,12 @@
-import * as fs from 'fs';
-import { getVideoDescription } from './getVideoDescription';
-import { parseEntry } from './parseEntry';
-import * as dotenv from 'dotenv';
+import * as fs from "fs";
+import { getVideoDescription } from "./getVideoDescription";
+import { parseEntry } from "./parseEntry";
+import * as dotenv from "dotenv";
 
-dotenv.config({ path: './.env' });
+dotenv.config({ path: "./.env" });
 
-if (!fs.existsSync('./.env')) {
-  console.log('The .env file does not exist.');
+if (!fs.existsSync("./.env")) {
+  console.log("The .env file does not exist.");
 }
 
 const API_KEY = process.env.YOUTUBE_API_KEY;
@@ -44,29 +44,43 @@ export async function fetchData(channelId: string): Promise<boolean> {
         async (item: {
           id: { videoId: any };
           snippet: { description: any };
-        }) => ({
-          videoId: item.id.videoId,
-          description: await getVideoDescription(item.id.videoId, API_KEY!),
-        })
+        }) => {
+          const description = await getVideoDescription(
+            item.id.videoId,
+            API_KEY!
+          );
+
+          // Check if the description contains "Match Result"
+          if (description.includes("Match Details")) {
+            return {
+              videoId: item.id.videoId,
+              description: description,
+            };
+          }
+          // Return null or undefined to filter out items that do not match
+          return null;
+        }
       )
     );
 
-    const videosResult: VideoInfo[] = idAndDescription.map(parseEntry);
+    const videosResult: VideoInfo[] = idAndDescription
+      .filter((item) => item !== null)
+      .map(parseEntry);
 
     try {
-      fs.writeFileSync('../result.json', JSON.stringify(videosResult));
-      console.log('File written successfully');
+      fs.writeFileSync("../result.json", JSON.stringify(videosResult));
+      console.log("File written successfully");
       return true;
     } catch (err: unknown) {
-      console.error('File write error:', err);
+      console.error("File write error:", err);
       return false;
     }
   } catch (err: unknown) {
-    console.error('Error fetching or processing data:', err);
+    console.error("Error fetching or processing data:", err);
     return false;
   }
 }
 
 setInterval(async () => {
-  await fetchData('UChyN8KYX-0MZc_lRuVC1tRw');
+  await fetchData("UChyN8KYX-0MZc_lRuVC1tRw");
 }, 1000 * 60 * 60 * 12);
