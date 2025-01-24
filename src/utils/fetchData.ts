@@ -10,6 +10,7 @@ if (!fs.existsSync("./.env")) {
 }
 
 const API_KEY = process.env.YOUTUBE_API_KEY;
+const channelID = process.env.CHANNEL_ID;
 const resultsNumber = process.env.RESULT_NUMBER;
 
 export interface IdAndDescription {
@@ -82,5 +83,5 @@ export async function fetchData(channelId: string): Promise<boolean> {
 }
 
 setInterval(async () => {
-  await fetchData("UChyN8KYX-0MZc_lRuVC1tRw");
+  await fetchData(channelID!);
 }, 1000 * 60 * 60 * 12);
