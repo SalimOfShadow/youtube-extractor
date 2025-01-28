@@ -1,12 +1,12 @@
-import * as fs from "fs";
-import { getVideoDescription } from "./getVideoDescription";
-import { parseEntry } from "./parseEntry";
-import * as dotenv from "dotenv";
+import * as fs from 'fs';
+import { getVideoDescription } from './getVideoDescription';
+import { parseEntry } from './parseEntry';
+import * as dotenv from 'dotenv';
 
-dotenv.config({ path: "./.env" });
+dotenv.config({ path: '../.env' });
 
-if (!fs.existsSync("./.env")) {
-  console.log("The .env file does not exist.");
+if (!fs.existsSync('../.env')) {
+  console.log('The .env file does not exist.');
 }
 
 const API_KEY = process.env.YOUTUBE_API_KEY;
@@ -25,7 +25,7 @@ export interface VideoInfo {
   roundsSetting: number;
   roundsWon: number;
   roundsLost: number;
-  matchWon: boolean;
+  winner: string;
 }
 
 export async function fetchData(channelId: string): Promise<boolean> {
@@ -52,7 +52,7 @@ export async function fetchData(channelId: string): Promise<boolean> {
           );
 
           // Check if the description contains "Match Result"
-          if (description.includes("Match Details")) {
+          if (description.includes('Match Details')) {
             return {
               videoId: item.id.videoId,
               description: description,
@@ -69,15 +69,15 @@ export async function fetchData(channelId: string): Promise<boolean> {
       .map(parseEntry);
 
     try {
-      fs.writeFileSync("../result.json", JSON.stringify(videosResult));
-      console.log("File written successfully");
+      fs.writeFileSync('../result.json', JSON.stringify(videosResult));
+      console.log('File written successfully');
       return true;
     } catch (err: unknown) {
-      console.error("File write error:", err);
+      console.error('File write error:', err);
       return false;
     }
   } catch (err: unknown) {
-    console.error("Error fetching or processing data:", err);
+    console.error('Error fetching or processing data:', err);
     return false;
   }
 }

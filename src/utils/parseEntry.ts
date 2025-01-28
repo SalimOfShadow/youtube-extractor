@@ -9,7 +9,7 @@ export function parseEntry(entry: IdAndDescription): VideoInfo {
       roundsWon: 0,
       roundsLost: 0,
       roundsSetting: 0,
-      matchWon: false,
+      winner: 'P1',
     };
   }
 
@@ -30,7 +30,7 @@ export function parseEntry(entry: IdAndDescription): VideoInfo {
       roundsSetting: 7,
       roundsWon: 0,
       roundsLost: 0,
-      matchWon: false,
+      winner: 'P1',
     };
   }
 
@@ -41,6 +41,6 @@ export function parseEntry(entry: IdAndDescription): VideoInfo {
     roundsSetting: parseInt(matches[3], 10),
     roundsWon: parseInt(matches[4], 10),
     roundsLost: parseInt(matches[5], 10),
-    matchWon: matches[6].toLowerCase() === 'win',
+    winner: matches[6].toUpperCase(),
   };
 }
